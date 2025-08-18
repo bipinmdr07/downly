@@ -100,7 +100,6 @@ export const DownloadItem = ({
               <span className="truncate">{download.downloadPath}</span>
             </div>
             <span>{download.size}</span>
-            {console.log({ download })}
             <span>Added {formatDistanceToNow(new Date(download.addedAt || download.added_at), { addSuffix: true })}</span>
           </div>
         </div>

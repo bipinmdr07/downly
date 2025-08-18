@@ -11,6 +11,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-cache, no-transform')
   res.setHeader('Connection', 'keep-alive')
   res.setHeader('Content-Encoding', 'none'); // critical
+  res.flushHeaders()
 
 
   stream.on("channel", function(event, data) {

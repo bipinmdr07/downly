@@ -60,8 +60,8 @@ function startDownload(download: Download) {
 
 export async function updateDownloadProgress(id: string, progress: number, speed?: number, eta?: number, downloaded?: string, total?: string) {
   await dbRun(
-    `UPDATE downloads SET progress = ?, speed = ?, eta = ?, updated_at = CURRENT_TIMESTAMP, downloaded = ?, total = ? WHERE id = ?`,
-    [progress, speed, eta, id, downloaded, total]
+    `UPDATE downloads SET status = ?, progress = ?, speed = ?, eta = ?, updated_at = CURRENT_TIMESTAMP, downloaded = ?, total = ? WHERE id = ?`,
+    ['downloading', progress, speed, eta, id, downloaded, total]
   )
 
   console.log({ progress })
@@ -70,7 +70,7 @@ export async function updateDownloadProgress(id: string, progress: number, speed
   broadcast(JSON.stringify( {
     type: 'progress_update',
     id,
-    updates: { progress, speed, eta }
+    updates: { progress, speed, eta, status: 'downloading' }
   } ))
 }
 

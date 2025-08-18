@@ -1,3 +1,4 @@
+import { startWgetDownload } from '@/lib/wget'
 import { NextApiRequest, NextApiResponse } from 'next'
 import sqlite3 from 'sqlite3'
 import { promisify } from 'util'
@@ -20,24 +21,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // Get download info
     const download = await dbGet('SELECT * FROM downloads WHERE id = ?', [id])
 
     if (!download) {
       return res.status(404).json({ error: 'Download not found' })
     }
 
+    if (['downloading', 'pending'].includes(download.status)) {
+      return res.status(403).json({ error: 'Download already in progress' })
+    }
+
     // Update status to downloading
     await dbRun(
       'UPDATE downloads SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      ['downloading', id]
+      ['pending', id]
     )
 
-    // Restart the download process
-    // Import and call startDownload function from main handler
-    // In a real implementation, you'd want to organize this better
+    startWgetDownload(download)
 
-    res.status(200).json({ message: 'Download resumed' })
+    res.status(200).json({...download, status: 'pending'})
   } catch (error) {
     console.error('Failed to resume download:', error)
     res.status(500).json({ error: 'Failed to resume download' })

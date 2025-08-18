@@ -112,7 +112,10 @@ export function DownloadManager() {
 
   const resumeDownload = async (id: string) => {
     try {
-      await fetch(`/api/downloads/${id}/resume`, { method: 'POST' })
+      const response = await fetch(`/api/downloads/${id}/resume`, { method: 'POST' })
+      const data = await response.json()
+
+      setDownloads(prev => prev.map((item) => item.id === data.id ? data : item))
     } catch (error) {
       console.error('Failed to resume download:', error)
     }

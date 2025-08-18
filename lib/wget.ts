@@ -2,8 +2,9 @@ import { Download, updateDownloadProgress, updateDownloadStatus } from "@/pages/
 import { spawn } from "child_process";
 import path from 'path'
 
+// Global variables to keep track of active downloads.
 // Active download processes
-const activeDownloads = new Map()
+export const activeDownloads = new Map()
 
 // Helper functions
 function parseSpeed(speedStr: string): number {
@@ -43,13 +44,13 @@ export const startWgetDownload = async (download: Download) => {
 
   const outputPath = path.join(download_path, filename)
 
-
   const wgetArgs = [
     '--continue',
     '--progress=bar:force',
     '--show-progress',
     '--timeout=30',
     '--tries=3',
+    '--no-check-certificate',
     '-O',
     outputPath,
     url
@@ -62,7 +63,6 @@ export const startWgetDownload = async (download: Download) => {
 
   wget.stderr.on('data', (data) => {
     const output = data.toString()
-    console.log({ output })
 
     // Parse wget progress output
     const progressMatch = output.match(/(\d+)%.*?(\d+(?:\.\d+)?[KMGT]?B\/s).*?eta\s+([\dhms\s]+)/i)
@@ -76,10 +76,13 @@ export const startWgetDownload = async (download: Download) => {
     }
   })
 
-  wget.on('close', (code) => {
+  wget.on('close', (code, signal) => {
     activeDownloads.delete(download.id)
 
-    if (code === 0) {
+    // Interrupted with Ctrl + C key
+    if (signal === 'SIGINT') {
+      updateDownloadStatus(id, 'paused')
+    } else if (code === 0) {
       updateDownloadStatus(id, 'completed', 100)
     } else {
       updateDownloadStatus(id, 'error')

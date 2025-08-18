@@ -1,3 +1,4 @@
+import { activeDownloads } from '@/lib/wget'
 import { NextApiRequest, NextApiResponse } from 'next'
 import sqlite3 from 'sqlite3'
 import { promisify } from 'util'
@@ -5,12 +6,6 @@ import { promisify } from 'util'
 const DB_PATH = './downloads.db'
 const db = new sqlite3.Database(DB_PATH)
 const dbRun = promisify(db.run.bind(db))
-
-// Import activeDownloads from main downloads handler
-// In a real implementation, you'd want to share this state properly
-declare global {
-  var activeDownloads: Map<string, any>
-}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -26,10 +21,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // Kill the wget process
-    if (global.activeDownloads && global.activeDownloads.has(id)) {
-      const process = global.activeDownloads.get(id)
-      process.kill('SIGTERM')
-      global.activeDownloads.delete(id)
+    if (activeDownloads && activeDownloads.has(id)) {
+      const process = activeDownloads.get(id)
+      process.kill('SIGINT')
+      activeDownloads.delete(id)
     }
 
     // Update database
