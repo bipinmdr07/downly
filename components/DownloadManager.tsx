@@ -85,9 +85,12 @@ export function DownloadManager() {
     )
   }
 
-  const removeDownload = async (id: string) => {
+  const removeDownload = async (id: string, deleteFile: boolean) => {
     try {
-      await fetch(`/api/downloads/${id}`, { method: 'DELETE' })
+      await fetch(`/api/downloads/${id}`, {
+        method: 'DELETE',
+        body: JSON.stringify({ deleteFile })
+      })
       setDownloads(prev => prev.filter(download => download.id !== id))
       toast({
         title: 'Download Removed',

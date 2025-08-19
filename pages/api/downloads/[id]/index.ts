@@ -3,6 +3,7 @@ import sqlite3 from 'sqlite3'
 import { promisify } from 'util'
 import fs from 'fs/promises'
 import path from 'path'
+import { activeDownloads } from '@/lib/wget'
 
 const DB_PATH = './downloads.db'
 const db = new sqlite3.Database(DB_PATH)
@@ -11,6 +12,7 @@ const dbGet = promisify(db.get.bind(db))
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query
+  const { deleteFile } = JSON.parse(req.body)
 
   if (typeof id !== 'string') {
     return res.status(400).json({ error: 'Invalid download ID' })
@@ -26,16 +28,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       // Kill the process if it's running
-      if (global.activeDownloads && global.activeDownloads.has(id)) {
-        const process = global.activeDownloads.get(id)
+      if (activeDownloads && activeDownloads.has(id)) {
+        const process = activeDownloads.get(id)
         process.kill('SIGKILL')
-        global.activeDownloads.delete(id)
+        activeDownloads.delete(id)
       }
 
       // Optionally delete the file
       try {
         const filePath = path.join(download.download_path, download.filename)
-        await fs.unlink(filePath)
+
+        if (deleteFile) {
+          await fs.unlink(filePath)
+        }
       } catch (fileError) {
         // File might not exist or be partially downloaded, that's ok
         console.log('Could not delete file:', fileError)

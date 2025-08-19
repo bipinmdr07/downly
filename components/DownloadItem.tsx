@@ -1,7 +1,12 @@
+import { useState } from 'react';
+
 import { Download } from "./DownloadManager";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+
+import { DeleteConfirmDialog } from "./DeleteConfirmDialog";
+
 import {
   Play,
   Pause,
@@ -18,8 +23,7 @@ interface DownloadItemProps {
   download: Download;
   onPause: (id: string) => void;
   onResume: (id: string) => void;
-  onStop: (id: string) => void;
-  onRemove: (id: string) => void;
+  onRemove: (id: string, deleteFile: boolean) => void;
 }
 
 const getStatusIcon = (status: Download["status"]) => {
@@ -62,6 +66,8 @@ export const DownloadItem = ({
   onResume,
   onRemove
 }: DownloadItemProps) => {
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+
   const canPause = download.status === "downloading";
   const canResume = download.status === "paused";
 
@@ -74,6 +80,23 @@ export const DownloadItem = ({
     format: ['years', 'months', 'days', 'hours', 'minutes', 'seconds'],
     zero: false
   })
+
+  const formatSpeed = (bps : number) : string => {
+    let speedInKbps = (bps / 1024); // Kilobits per second
+    let speedInMbps = (speedInKbps / 1024); // Megabits per second
+
+    if (speedInMbps >= 1) {
+        return speedInMbps.toFixed(2) + " Mbps"; // Format to 2 decimal places
+    } else if (speedInKbps >= 1) {
+        return speedInKbps.toFixed(2) + " Kbps";
+    } else {
+        return bps.toFixed(2) + " bps";
+    }
+  }
+
+  const handleDeleteConfirm = (deleteFile: boolean) => {
+    onRemove(download.id, deleteFile)
+  }
 
   return (
     <div className="p-4 border rounded-lg space-y-3 hover:bg-accent/50 transition-colors">
@@ -125,7 +148,7 @@ export const DownloadItem = ({
           <Button
             size="sm"
             variant="outline"
-            onClick={() => onRemove(download.id)}
+            onClick={() => setShowDeleteDialog(true)}
           >
             <Trash2 className="h-4 w-4" />
           </Button>
@@ -138,12 +161,19 @@ export const DownloadItem = ({
           <div className="flex justify-between text-xs text-muted-foreground">
             <span>{download.progress}%</span>
             <div className="flex gap-4">
-              {download.speed && <span>{download.speed}</span>}
-              {download.eta && <span>ETA: {download.eta}</span>}
+              {download.speed && <span>{formatSpeed(download.speed)}</span>}
+              {download.eta && <span>ETA: {formattedEta}</span>}
             </div>
           </div>
         </div>
       )}
+
+      <DeleteConfirmDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onConfirm={handleDeleteConfirm}
+        filename={download.filename}
+      />
     </div>
   );
 };
