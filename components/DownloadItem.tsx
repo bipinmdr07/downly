@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   Play,
   Pause,
-  Square,
   Trash2,
   FileDown,
   Clock,
@@ -61,12 +60,10 @@ export const DownloadItem = ({
   download,
   onPause,
   onResume,
-  onStop,
   onRemove
 }: DownloadItemProps) => {
   const canPause = download.status === "downloading";
   const canResume = download.status === "paused";
-  const canStop = download.status === "downloading" || download.status === "pending";
 
   const duration = intervalToDuration({
     start: 0,
@@ -122,16 +119,6 @@ export const DownloadItem = ({
               onClick={() => onPause(download.id)}
             >
               <Pause className="h-4 w-4" />
-            </Button>
-          )}
-
-          {canStop && (
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => onStop(download.id)}
-            >
-              <Square className="h-4 w-4" />
             </Button>
           )}
 

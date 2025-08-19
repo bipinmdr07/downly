@@ -6,7 +6,6 @@ interface DownloadListProps {
   downloads: Download[];
   onPause: (id: string) => void;
   onResume: (id: string) => void;
-  onStop: (id: string) => void;
   onRemove: (id: string) => void;
 }
 
@@ -14,7 +13,6 @@ export const DownloadList = ({
   downloads,
   onPause,
   onResume,
-  onStop,
   onRemove
 }: DownloadListProps) => {
   if (downloads.length === 0) {
@@ -48,7 +46,6 @@ export const DownloadList = ({
             download={download}
             onPause={onPause}
             onResume={onResume}
-            onStop={onStop}
             onRemove={onRemove}
           />
         ))}

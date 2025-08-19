@@ -121,14 +121,6 @@ export function DownloadManager() {
     }
   }
 
-  const stopDownload = async (id: string) => {
-    try {
-      await fetch(`/api/downloads/${id}/stop`, { method: 'POST' })
-    } catch (error) {
-      console.error('Failed to stop download:', error)
-    }
-  }
-
   return (
     <div className="min-h-screen bg-background">
       <Header downloadCount={downloads.length} />
@@ -138,7 +130,6 @@ export function DownloadManager() {
           downloads={downloads}
           onPause={pauseDownload}
           onResume={resumeDownload}
-          onStop={stopDownload}
           onRemove={removeDownload}
         />
       </main>
