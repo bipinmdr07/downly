@@ -11,7 +11,7 @@ interface AddDownloadFormProps {
 
 export const AddDownloadForm = ({ onAddDownload }: AddDownloadFormProps) => {
   const [url, setUrl] = useState("");
-  const [downloadPath, setDownloadPath] = useState(process.env.DOWNLOAD_PATH);
+  const [downloadPath, setDownloadPath] = useState(process.env.NEXT_PUBLIC_DOWNLOAD_PATH);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
