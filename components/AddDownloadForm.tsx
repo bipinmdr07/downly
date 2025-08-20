@@ -10,10 +10,8 @@ interface AddDownloadFormProps {
 }
 
 export const AddDownloadForm = ({ onAddDownload }: AddDownloadFormProps) => {
-  const [url, setUrl] = useState("https://dl3.downloadly.ir/Files/Elearning/Udemy_Creating_3D_environments_in_Blender_1080_2024-9_Downloadly.ir.part01.rar?nocache=1755441999");
-  /* const [downloadPath, setDownloadPath] = useState("/home/user/Downloads"); */
-  const [downloadPath, setDownloadPath] = useState("/Users/leapfrog/Desktop/tmp");
-
+  const [url, setUrl] = useState("");
+  const [downloadPath, setDownloadPath] = useState("/home/{user}/Downloads");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
