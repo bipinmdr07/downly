@@ -37,8 +37,17 @@ export function DownloadManager() {
       }
     }
 
-    return () => {
+    const cleanup = () => {
       eventSource.close()
+    }
+
+    window.addEventListener("pagehide", cleanup);
+    window.addEventListener("beforeunload", cleanup)
+
+    return () => {
+      cleanup()
+      window.removeEventListener("pagehide", cleanup);
+      window.removeEventListener("beforeunload", cleanup)
     }
   }, [])
 
