@@ -3,7 +3,7 @@ import sqlite3 from 'sqlite3'
 import { promisify } from 'util'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
-import { broadcast } from '../events'
+import { broadcast } from '@/lib/downloadsEmitter'
 import { startWgetDownload } from '@/lib/wget'
 
 const DB_PATH = './downloads.db'
@@ -12,7 +12,7 @@ const db = new sqlite3.Database(DB_PATH)
 // Promisify database methods
 const dbRun = promisify(db.run.bind(db))
 const dbGet = promisify(db.get.bind(db))
-const dbAll = promisify(db.all.bind(db))
+export const dbAll = promisify(db.all.bind(db))
 
 // Initialize database
 async function initDB() {
@@ -53,7 +53,7 @@ export interface Download {
 
 
 // Start wget download process
-function startDownload(download: Download) {
+export function startDownload(download: Download) {
   startWgetDownload(download)
 }
 
@@ -64,14 +64,11 @@ export async function updateDownloadProgress(id: string, progress: number, speed
     ['downloading', progress, speed, eta, id, downloaded, total]
   )
 
-  console.log({ progress })
-
-
-  broadcast(JSON.stringify( {
+  broadcast(JSON.stringify({
     type: 'progress_update',
     id,
     updates: { progress, speed, eta, status: 'downloading' }
-  } ))
+  }))
 }
 
 export async function updateDownloadStatus(id: string, status: string, progress?: number) {
@@ -153,3 +150,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(405).end(`Method ${req.method} Not Allowed`)
   }
 }
+

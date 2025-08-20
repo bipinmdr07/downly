@@ -1,4 +1,4 @@
-import { activeDownloads } from '@/lib/wget'
+import { globalActiveDownloads } from '@/constants/global'
 import { NextApiRequest, NextApiResponse } from 'next'
 import sqlite3 from 'sqlite3'
 import { promisify } from 'util'
@@ -21,10 +21,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // Kill the wget process
-    if (activeDownloads && activeDownloads.has(id)) {
-      const process = activeDownloads.get(id)
+    if (globalActiveDownloads && globalActiveDownloads.has(id)) {
+      const process = globalActiveDownloads.get(id)
       process.kill('SIGINT')
-      activeDownloads.delete(id)
+      globalActiveDownloads.delete(id)
     }
 
     // Update database

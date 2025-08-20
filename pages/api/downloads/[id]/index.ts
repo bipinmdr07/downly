@@ -3,7 +3,7 @@ import sqlite3 from 'sqlite3'
 import { promisify } from 'util'
 import fs from 'fs/promises'
 import path from 'path'
-import { activeDownloads } from '@/lib/wget'
+import { globalActiveDownloads } from '@/constants/global'
 
 const DB_PATH = './downloads.db'
 const db = new sqlite3.Database(DB_PATH)
@@ -28,10 +28,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       // Kill the process if it's running
-      if (activeDownloads && activeDownloads.has(id)) {
-        const process = activeDownloads.get(id)
+      if (globalActiveDownloads && globalActiveDownloads.has(id)) {
+        const process = globalActiveDownloads.get(id)
         process.kill('SIGKILL')
-        activeDownloads.delete(id)
+        globalActiveDownloads.delete(id)
       }
 
       // Optionally delete the file

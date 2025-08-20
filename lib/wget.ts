@@ -1,10 +1,10 @@
+import { globalActiveDownloads } from "@/constants/global";
 import { Download, updateDownloadProgress, updateDownloadStatus } from "@/pages/api/downloads";
 import { spawn } from "child_process";
 import path from 'path'
 
 // Global variables to keep track of active downloads.
 // Active download processes
-export const activeDownloads = new Map()
 
 // Helper functions
 function parseSpeed(speedStr: string): number {
@@ -59,7 +59,7 @@ export const startWgetDownload = async (download: Download) => {
   const wget = spawn('wget', wgetArgs)
 
   // store process references
-  activeDownloads.set(id, wget)
+  globalActiveDownloads.set(id, wget)
 
   wget.stderr.on('data', (data) => {
     const output = data.toString()
@@ -77,7 +77,7 @@ export const startWgetDownload = async (download: Download) => {
   })
 
   wget.on('close', (code, signal) => {
-    activeDownloads.delete(download.id)
+    globalActiveDownloads.delete(download.id)
 
     // Interrupted with Ctrl + C key
     if (signal === 'SIGINT') {
