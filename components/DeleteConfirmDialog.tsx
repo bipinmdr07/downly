@@ -58,7 +58,7 @@ export function DeleteConfirmDialog({
           />
           <label
             htmlFor="delete-file"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 hover:cursor-pointer"
           >
             Also delete the file from disk
           </label>
