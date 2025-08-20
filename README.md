@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<img width="120" height="120" src="public/logo.png" alt="Downly logo">
+
+# Downly
+[![Ask DeepWiki](https://devin.ai/assets/askdeepwiki.png)](https://deepwiki.com/bipinmdr07/downly)
+
+Downly is a self-hosted, web-based download manager built with Next.js. It leverages the power of `wget` to provide a user-friendly interface for managing downloads, complete with real-time progress updates, pausing, and resuming capabilities.
+
+## Features
+
+- **Web-based UI**: Manage your downloads from any browser on your network.
+- **Resumable Downloads**: Pause and resume downloads at any time, thanks to `wget`'s `--continue` feature.
+- **Real-time Updates**: Track download progress, speed, and ETA in real-time without refreshing the page, powered by Server-Sent Events (SSE).
+- **Persistent Queue**: Your download list is saved in a SQLite database, so you won't lose track of your files.
+- **Auto-Resume on Startup**: Incomplete downloads are automatically resumed when the application starts.
+- **File Management**: Choose to delete files from the disk when removing them from the download list.
+- **Modern Tech Stack**: Built with Next.js, React, and TypeScript for a fast and reliable experience.
+
+## Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org/) (App Router)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with [shadcn/ui](https://ui.shadcn.com/)
+- **Database**: [SQLite](https://www.sqlite.org/index.html)
+- **Download Engine**: `wget` (via Node.js `child_process`)
+- **Real-time Communication**: Server-Sent Events (SSE)
 
 ## Getting Started
 
-First, run the development server:
+Follow these instructions to get a local copy up and running.
 
+### Prerequisites
+
+- **Node.js**: Version 20 or later is recommended.
+- **`wget`**: You must have `wget` installed and accessible in your system's PATH.
+
+To check if you have `wget` installed, run:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+wget --version
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/bipinmdr07/downly.git
+    cd downly
+    ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    # or
+    yarn install
+    # or
+    pnpm install
+    ```
 
-## Learn More
+3.  **Set up environment variables:**
+    Create a `.env` file by copying the example file:
+    ```bash
+    cp .env.example .env
+    ```
+    Open the `.env` file and configure the variables. The `NEXT_PUBLIC_DOWNLOAD_PATH` is required.
 
-To learn more about Next.js, take a look at the following resources:
+    ```env
+    # This must be set to 'nodejs' for the backend logic to run.
+    NEXT_RUNTIME=nodejs
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    # Set the absolute path where your files will be downloaded.
+    # Example for Linux/macOS: NEXT_PUBLIC_DOWNLOAD_PATH=/home/youruser/Downloads
+    # Example for Windows: NEXT_PUBLIC_DOWNLOAD_PATH=C:\Users\youruser\Downloads
+    NEXT_PUBLIC_DOWNLOAD_PATH=/path/to/your/downloads
+    ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4.  **Run the application:**
+    ```bash
+    npm run dev
+    ```
 
-## Deploy on Vercel
+5.  Open [http://localhost:3000](http://localhost:3000) in your browser to start using Downly.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## How It Works
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- The frontend, built with **React** and **Next.js**, provides the user interface for adding and managing downloads.
+- When a new download is added, a request is sent to a **Next.js API route**.
+- The API route creates an entry in a local **SQLite** database and spawns a `wget` **child process** to handle the file download.
+- The server continuously monitors the `stderr` output from the `wget` process, parsing it to extract progress percentage, download speed, and ETA.
+- This progress information is broadcasted from the server to all connected clients in real-time using **Server-Sent Events (SSE)**.
+- Pausing a download sends a `SIGINT` signal to the `wget` process. Resuming starts a new `wget` process with the `--continue` flag, allowing it to pick up where it left off.
+- The application's `instrumentation.ts` file ensures that any non-completed downloads from previous sessions are automatically resumed upon server startup.
