@@ -1,4 +1,5 @@
-import { Download, Folder } from "lucide-react";
+import { Download } from "lucide-react";
+import Image from "next/image";
 
 interface HeaderProps {
   downloadCount: number;
@@ -22,7 +23,7 @@ export const Header = ({ downloadCount }: HeaderProps) => {
           </div>
           
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Folder className="h-4 w-4" />
+            <Image src="/logo.png" alt="logo" height={32} width={32} />
             <span>Downly</span>
           </div>
         </div>
