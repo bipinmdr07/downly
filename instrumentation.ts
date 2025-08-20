@@ -4,6 +4,8 @@ export async function register() {
 
     const downloads = await dbAll('SELECT * FROM downloads WHERE status not in (?, ?)', ['paused', 'completed'])
 
+    console.log(`Resuming past ${downloads.length} downloads.`)
+
     downloads.forEach((download) => {
       updateDownloadProgress(download.id, 'downloading')
       startDownload(download)
