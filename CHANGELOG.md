@@ -1,0 +1,8 @@
+# 1.0.0 - 2025-08-21
+- **Web-based UI**: Manage your downloads from any browser on your network.
+- **Resumable Downloads**: Pause and resume downloads at any time, thanks to `wget`'s `--continue` feature.
+- **Real-time Updates**: Track download progress, speed, and ETA in real-time without refreshing the page, powered by Server-Sent Events (SSE).
+- **Persistent Queue**: Your download list is saved in a SQLite database, so you won't lose track of your files.
+- **Auto-Resume on Startup**: Incomplete downloads are automatically resumed when the application starts.
+- **File Management**: Choose to delete files from the disk when removing them from the download list.
+- **Modern Tech Stack**: Built with Next.js, React, and TypeScript for a fast and reliable experience.
