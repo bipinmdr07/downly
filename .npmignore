@@ -36,6 +36,7 @@ tsconfig.json
 build/*
 !build/standalone
 build/standalone/node_modules
+!build/standalone/public
 build/standalone/*.db
 build/standalone/.env
 build/standalone/wget*
