@@ -64,7 +64,7 @@ export async function updateDownloadProgress(id: string, progress: number, speed
 
 export async function updateDownloadStatus(id: string, status: string, progress?: number) {
   const updateFields = ['status = ?', 'updated_at = CURRENT_TIMESTAMP']
-  const values = [status]
+  const values: (string | number)[] = [status]
 
   if (progress !== undefined) {
     updateFields.push('progress = ?')
@@ -78,7 +78,7 @@ export async function updateDownloadStatus(id: string, status: string, progress?
     values
   )
 
-  const updates = { status }
+  const updates: Record<string, string | number> = { status }
   if (progress !== undefined) updates.progress = progress
 
   broadcast(JSON.stringify ({

@@ -46,7 +46,7 @@ export function DeleteConfirmDialog({
             <DialogTitle>Delete Download</DialogTitle>
           </div>
           <DialogDescription>
-            Are you sure you want to delete "{filename}"?
+            Are you sure you want to delete &quot;{filename}&quot;?
           </DialogDescription>
         </DialogHeader>
 

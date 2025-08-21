@@ -50,7 +50,7 @@ const getStatusVariant = (status: Download["status"]) => {
     case "paused":
       return "secondary";
     case "completed":
-      return "success" as any;
+      return "success";
     case "error":
       return "destructive";
     case "pending":
@@ -82,8 +82,8 @@ export const DownloadItem = ({
   })
 
   const formatSpeed = (bps : number) : string => {
-    let speedInKbps = (bps / 1024); // Kilobits per second
-    let speedInMbps = (speedInKbps / 1024); // Megabits per second
+    const speedInKbps = (bps / 1024); // Kilobits per second
+    const speedInMbps = (speedInKbps / 1024); // Megabits per second
 
     if (speedInMbps >= 1) {
         return speedInMbps.toFixed(2) + " Mbps"; // Format to 2 decimal places
@@ -117,10 +117,10 @@ export const DownloadItem = ({
           <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
             <div className="flex items-center gap-1">
               <Folder className="h-3 w-3" />
-              <span className="truncate">{download.downloadPath}</span>
+              <span className="truncate">{download.download_path}</span>
             </div>
             <span>{download.size}</span>
-            <span>Added {formatDistanceToNow(new Date(download.addedAt || download.added_at), { addSuffix: true })}</span>
+            <span>Added {formatDistanceToNow(new Date(download.added_at), { addSuffix: true })}</span>
           </div>
         </div>
 

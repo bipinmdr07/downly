@@ -13,10 +13,10 @@ export interface Download {
   status: 'pending' | 'downloading' | 'paused' | 'completed' | 'error'
   progress: number
   size?: number
-  downloadPath: string
+  download_path: string
   speed?: number
   eta?: number
-  addedAt: Date
+  added_at: Date
 }
 
 export function DownloadManager() {
@@ -78,6 +78,7 @@ export function DownloadManager() {
         })
       }
     } catch (error) {
+      console.error(error)
       toast({
         title: 'Error',
         description: 'Failed to add download',
@@ -106,6 +107,7 @@ export function DownloadManager() {
         description: 'Download has been removed from the list',
       })
     } catch (error) {
+      console.error(error)
       toast({
         title: 'Error',
         description: 'Failed to remove download',

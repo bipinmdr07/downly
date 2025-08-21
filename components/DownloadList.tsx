@@ -4,9 +4,9 @@ import { Card } from "@/components/ui/card";
 
 interface DownloadListProps {
   downloads: Download[];
-  onPause: (id: string) => void;
-  onResume: (id: string) => void;
-  onRemove: (id: string) => void;
+  onPause: (id: string) => Promise<void>;
+  onResume: (id: string) => Promise<void>;
+  onRemove: (id: string, deleteFile: boolean) => Promise<void>;
 }
 
 export const DownloadList = ({
