@@ -5,6 +5,28 @@ const DB_PATH = './downloads.db'
 const db = new sqlite3.Database(DB_PATH)
 type paramTypes = string | number | undefined
 
+
+// Initialize database
+export async function initDB() {
+  await dbRun(`
+    CREATE TABLE IF NOT EXISTS downloads (
+      id TEXT PRIMARY KEY,
+      url TEXT NOT NULL,
+      filename TEXT NOT NULL,
+      status TEXT NOT NULL,
+      progress REAL DEFAULT 0,
+      size INTEGER,
+      download_path TEXT NOT NULL,
+      speed REAL,
+      eta INTEGER,
+      downloaded TEXT,
+      total TEXT,
+      added_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `)
+}
+
 export const dbRun = (query: string, params: paramTypes[] = []): Promise<sqlite3.RunResult> => {
   return new Promise((resolve, reject) => {
     db.run(query, params, function(this: sqlite3.RunResult, err: Error | null) {

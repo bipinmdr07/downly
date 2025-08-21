@@ -5,29 +5,6 @@ import { broadcast } from '@/lib/downloadsEmitter'
 import { startWgetDownload } from '@/lib/wget'
 import { dbAll, dbRun } from '@/lib/db'
 
-// Initialize database
-async function initDB() {
-  await dbRun(`
-    CREATE TABLE IF NOT EXISTS downloads (
-      id TEXT PRIMARY KEY,
-      url TEXT NOT NULL,
-      filename TEXT NOT NULL,
-      status TEXT NOT NULL,
-      progress REAL DEFAULT 0,
-      size INTEGER,
-      download_path TEXT NOT NULL,
-      speed REAL,
-      eta INTEGER,
-      downloaded TEXT,
-      total TEXT,
-      added_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )
-  `)
-}
-
-initDB()
-
 export interface Download {
   id: string
   url: string
