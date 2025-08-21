@@ -1,14 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import sqlite3 from 'sqlite3'
-import { promisify } from 'util'
 import fs from 'fs/promises'
 import path from 'path'
 import { globalActiveDownloads } from '@/constants/global'
-
-const DB_PATH = './downloads.db'
-const db = new sqlite3.Database(DB_PATH)
-const dbRun = promisify(db.run.bind(db))
-const dbGet = promisify(db.get.bind(db))
+import { dbGet, dbRun } from '@/lib/db'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query

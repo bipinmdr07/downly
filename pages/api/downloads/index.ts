@@ -1,18 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import sqlite3 from 'sqlite3'
-import { promisify } from 'util'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 import { broadcast } from '@/lib/downloadsEmitter'
 import { startWgetDownload } from '@/lib/wget'
-
-const DB_PATH = './downloads.db'
-const db = new sqlite3.Database(DB_PATH)
-
-// Promisify database methods
-const dbRun = promisify(db.run.bind(db))
-const dbGet = promisify(db.get.bind(db))
-export const dbAll = promisify(db.all.bind(db))
+import { dbAll, dbRun } from '@/lib/db'
 
 // Initialize database
 async function initDB() {
@@ -87,7 +78,7 @@ export async function updateDownloadStatus(id: string, status: string, progress?
     values
   )
 
-  const updates: any = { status }
+  const updates = { status }
   if (progress !== undefined) updates.progress = progress
 
   broadcast(JSON.stringify ({
@@ -103,8 +94,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const downloads = await dbAll('SELECT * FROM downloads ORDER BY added_at DESC')
       res.status(200).json(downloads)
 
-      // TODO: might need to call wget or aria2c to refresh the download status.
     } catch (error) {
+      console.error(error)
       res.status(500).json({ error: 'Failed to fetch downloads' })
     }
   } else if (req.method === 'POST') {
@@ -143,6 +134,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       res.status(201).json(download)
     } catch (error) {
+      console.error(error)
       res.status(500).json({ error: 'Failed to add download' })
     }
   } else {

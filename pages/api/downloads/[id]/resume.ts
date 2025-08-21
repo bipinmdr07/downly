@@ -1,12 +1,6 @@
+import { dbGet, dbRun } from '@/lib/db'
 import { startWgetDownload } from '@/lib/wget'
 import { NextApiRequest, NextApiResponse } from 'next'
-import sqlite3 from 'sqlite3'
-import { promisify } from 'util'
-
-const DB_PATH = './downloads.db'
-const db = new sqlite3.Database(DB_PATH)
-const dbRun = promisify(db.run.bind(db))
-const dbGet = promisify(db.get.bind(db))
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
