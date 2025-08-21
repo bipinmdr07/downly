@@ -67,9 +67,9 @@ wget --version
     NEXT_RUNTIME=nodejs
 
     # Set the absolute path where your files will be downloaded.
-    # Example for Linux/macOS: NEXT_PUBLIC_DOWNLOAD_PATH=/home/youruser/Downloads
-    # Example for Windows: NEXT_PUBLIC_DOWNLOAD_PATH=C:\Users\youruser\Downloads
-    NEXT_PUBLIC_DOWNLOAD_PATH=/path/to/your/downloads
+    # Example for Linux/macOS: DOWNLOAD_PATH=/home/youruser/Downloads
+    # Example for Windows: DOWNLOAD_PATH=C:\Users\youruser\Downloads
+    DOWNLOAD_PATH=/path/to/your/downloads
     ```
 
 4.  **Run the application:**

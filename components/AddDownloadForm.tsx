@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +11,11 @@ interface AddDownloadFormProps {
 
 export const AddDownloadForm = ({ onAddDownload }: AddDownloadFormProps) => {
   const [url, setUrl] = useState("");
-  const [downloadPath, setDownloadPath] = useState(process.env.NEXT_PUBLIC_DOWNLOAD_PATH || '');
+  const [downloadPath, setDownloadPath] = useState('');
+
+  useEffect(() => {
+    fetchConfig()
+  }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +24,16 @@ export const AddDownloadForm = ({ onAddDownload }: AddDownloadFormProps) => {
       setUrl("");
     }
   };
+
+  const fetchConfig = async () => {
+    try {
+      const response = await fetch('/api/configs')
+      const data = await response.json()
+      setDownloadPath(data.config.downloadPath)
+    } catch (error) {
+      console.error('Failed to fetch configs: ', error)
+    }
+  }
 
   return (
     <Card>
