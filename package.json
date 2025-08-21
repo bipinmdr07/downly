@@ -4,8 +4,8 @@
   "private": false,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build && cp -r public build/standalone/ && cp -r build/static build/standalone/build/",
-    "start": "next start",
+    "build": "NODE_ENV=production next build && cp -r public build/standalone/ && cp -r build/static build/standalone/build/",
+    "start": "node build/standalone/server.js",
     "lint": "next lint"
   },
   "dependencies": {
