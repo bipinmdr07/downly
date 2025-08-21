@@ -1,3 +1,7 @@
+# 1.1.1 - 2025-08-21
+- **CLI**: Add the cli compatibility to execute downly directly after install.
+- **Configurable**: pass `-d, --download-path` for setting download path, `-c, --config` for sending the path to config.js file, `-p, --port` for setting port, `-h, --hostname` to set hostname.
+
 # 1.0.0 - 2025-08-21
 - **Web-based UI**: Manage your downloads from any browser on your network.
 - **Resumable Downloads**: Pause and resume downloads at any time, thanks to `wget`'s `--continue` feature.
