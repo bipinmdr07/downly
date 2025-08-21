@@ -2,6 +2,9 @@
   "name": "downly",
   "version": "1.1.0",
   "private": false,
+  "bin": {
+    "downly": "./bin/cli.js"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "NODE_ENV=production next build && cp -r public build/standalone/ && cp -r build/static build/standalone/build/",
