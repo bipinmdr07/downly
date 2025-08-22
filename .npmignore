@@ -18,25 +18,24 @@
 /out/
 
 # components
-app
-components
-constants
-hooks
-lib
-pages
-public
-instrumentation.ts
-next-env.d.ts
-next.config.ts
-package-lock.json
-postcss.config.js
-tsconfig.json
+/app
+/components
+/constants
+/hooks
+/lib
+/pages
+/public
+/instrumentation.ts
+/next-env.d.ts
+/next.config.ts
+/package-lock.json
+/postcss.config.js
+/tsconfig.json
 
 # production
 build/*
 !build/standalone
 build/standalone/node_modules
-!build/standalone/public
 build/standalone/*.db
 build/standalone/.env
 build/standalone/wget*
