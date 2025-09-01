@@ -159,10 +159,10 @@ export const DownloadItem = ({
         <div className="space-y-2">
           <Progress value={download.progress} className="h-2" />
           <div className="flex justify-between text-xs text-muted-foreground">
-            <span>{download.progress}%</span>
+            <span>{download.progress.toFixed(2)}%</span>
             <div className="flex gap-4">
-              {download.speed && <span>{formatSpeed(download.speed)}</span>}
-              {download.eta && <span>ETA: {formattedEta}</span>}
+              <span>{formatSpeed(download?.speed || 0)}</span>
+              <span>ETA: {formattedEta || 'N/A'}</span>
             </div>
           </div>
         </div>
