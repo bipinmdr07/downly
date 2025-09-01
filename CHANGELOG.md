@@ -1,3 +1,11 @@
+# 1.1.3 - Unreleased
+### Added
+- **Aria2 integration**: Add aria2c as default download tool replacing wget, adding support for downloading torrent content using torrent file or magnet link.
+- **CLI**`-d, --db-location` for providing the custom location for downloads.sqlite file to be placed for record persistence on downly update with `npm i -g downly`
+
+### Changed
+- **CLI** `-d, --download-path` is changes with `-l, --download-location`
+
 # 1.1.2 - 2025-08-22
 - **CLI**: Add the missing dependencies ignored by npmignore.
 
