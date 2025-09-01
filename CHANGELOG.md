@@ -1,4 +1,9 @@
-# 1.1.3 - Unreleased
+# 1.2.1 - 2025-09-01
+### Fixed
+- Rename of downloadPath to downloadLocation in cli.js.
+- add missing `downly start` in service file.
+
+# 1.2.0 - 2025-09-01
 ### Added
 - **Aria2 integration**: Add aria2c as default download tool replacing wget, adding support for downloading torrent content using torrent file or magnet link.
 - **CLI**`-d, --db-location` for providing the custom location for downloads.sqlite file to be placed for record persistence on downly update with `npm i -g downly`

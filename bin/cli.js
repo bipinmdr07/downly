@@ -26,7 +26,7 @@ program
   .option("-h, --hostname <hostname>", "hostname to bind", "0.0.0.0")
   .option("-c, --config <path>", "path to config file")
   .option("-l, --download-location <path>", "path to download file location", "")
-  .option("-d, --db-location <path>", "path to store sqlite db file", "")
+  .option("-d, --db-location <path>", "path to store sqlite db file", ".")
   .action(async (options) => {
     console.log("Starting Downly production server...");
 
@@ -35,7 +35,7 @@ program
 
     process.env.PORT = options.port || config.port;
     process.env.HOSTNAME = options.hostname || config.hostname;
-    process.env.DOWNLOAD_LOCATION = options.downloadPath || config.downloadLocation;
+    process.env.DOWNLOAD_LOCATION = options.downloadLocation || config.downloadLocation;
     process.env.DB_LOCATION = options.dbLocation || config.dbLocation;
 
     // Check if standalone server exists

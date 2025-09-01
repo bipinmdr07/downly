@@ -110,7 +110,7 @@ Wants=network.target
 Type=simple
 User=$USER
 Group=$USER
-ExecStart=<which downly> -l <Full path to download location> -d <Full path to db location>
+ExecStart=<which downly> start -l <Full path to download location> -d <Full path to db location>
 Restart=always
 
 [Install]
