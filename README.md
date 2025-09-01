@@ -79,6 +79,52 @@ aria2c --version
 
 5.  Open [http://localhost:3000](http://localhost:3000) in your browser to start using Downly.
 
+## Setting up downly as a systemctl service.
+### Install downly
+
+``` bash
+npm i -g downly
+```
+
+### Get downly installed location
+
+``` bash
+which downly
+```
+
+### Create a systemctl service
+
+``` bash
+touch /etc/systemd/system/downly.service
+```
+
+Open copy the content below replace `<Full path to download location>`, `<Full path to db location>` and `<which downly>` and save
+``` bash
+[Unit]
+Description="A simple download manager built with NextJS using feature of aria2c."
+Documentation=https://www.npmjs.com/package/downly
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=$USER
+Group=$USER
+ExecStart=<which downly> -l <Full path to download location> -d <Full path to db location>
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+Alias=downly.service
+```
+
+### enable the service
+
+``` bash
+systemctl daemon-reload
+systemctl enable downly.service
+```
+
 ## How It Works
 
 - The frontend, built with **React** and **Next.js**, provides the user interface for adding and managing downloads.
