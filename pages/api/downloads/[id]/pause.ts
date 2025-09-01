@@ -1,5 +1,4 @@
-import { globalActiveDownloads } from '@/constants/global'
-import { dbRun } from '@/lib/db'
+import { pauseAria2cDownload } from '@/lib/aria2c'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -15,18 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    // Kill the wget process
-    if (globalActiveDownloads && globalActiveDownloads.has(id)) {
-      const process = globalActiveDownloads.get(id)
-      process.kill('SIGINT')
-      globalActiveDownloads.delete(id)
-    }
-
-    // Update database
-    await dbRun(
-      'UPDATE downloads SET status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-      ['paused', id]
-    )
+    await pauseAria2cDownload(id)
 
     res.status(200).json({ message: 'Download paused' })
   } catch (error) {
