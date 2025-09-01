@@ -247,7 +247,6 @@ export const startAria2cDownload = async (download: Download): Promise<void> => 
   // Parse STDOUT for progress information
   aria2Process.stdout?.on('data', (data) => {
     const output = data.toString();
-    console.log({ output })
     parseAria2Output(output, download);
   });
 
