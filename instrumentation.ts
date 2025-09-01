@@ -2,8 +2,9 @@ import { Download } from "./pages/api/downloads"
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === 'nodejs') {
-    const { startDownload, updateDownloadProgress } = require("@/pages/api/downloads")
+    const { startDownload } = require("@/pages/api/downloads")
     const { dbAll, initDB } = require("@/lib/db")
+    const { checkAria2cInstalled } = require("@/lib/aria2c")
 
     try {
       await initDB()
@@ -12,12 +13,18 @@ export async function register() {
       console.error('Error when initializting database')
     }
 
+    const isAriaInstalled = await checkAria2cInstalled()
+
+    if (!isAriaInstalled) {
+      console.error("Missing dependency aria2c, please install and try again")
+      process.exit(1)
+    }
+
     const downloads = await dbAll('SELECT * FROM downloads WHERE status not in (?, ?)', ['paused', 'completed'])
 
-    console.log(`Resuming past ${downloads.length} downloads.`)
+    console.log(`Resuming ${downloads.length} downloads.`)
 
     downloads.forEach((download: Download) => {
-      updateDownloadProgress(download.id, 'downloading')
       startDownload(download)
     })
   }

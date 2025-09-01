@@ -1,5 +1,5 @@
 import { dbGet, dbRun } from '@/lib/db'
-import { startWgetDownload } from '@/lib/wget'
+import { startAria2cDownload } from '@/lib/aria2c'
 import { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -31,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ['pending', id]
     )
 
-    startWgetDownload(download)
+    startAria2cDownload(download)
 
     res.status(200).json({...download, status: 'pending'})
   } catch (error) {

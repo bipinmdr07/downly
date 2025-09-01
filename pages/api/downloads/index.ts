@@ -2,8 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import path from 'path'
 import { v4 as uuidv4 } from 'uuid'
 import { broadcast } from '@/lib/downloadsEmitter'
-import { startWgetDownload } from '@/lib/wget'
+import { getDownloadType, startAria2cDownload } from '@/lib/aria2c'
 import { dbAll, dbRun } from '@/lib/db'
+import { globalActiveDownloads } from '@/constants/global'
 
 export interface Download {
   id: string
@@ -22,11 +23,14 @@ export interface Download {
 
 // Start wget download process
 export function startDownload(download: Download) {
-  startWgetDownload(download)
+  startAria2cDownload(download)
 }
 
 
 export async function updateDownloadProgress(id: string, progress: number, speed?: number, eta?: number, downloaded?: string, total?: string) {
+  const process = globalActiveDownloads.get(id)
+  process.progress = progress
+
   await dbRun(
     `UPDATE downloads SET status = ?, progress = ?, speed = ?, eta = ?, updated_at = CURRENT_TIMESTAMP, downloaded = ?, total = ? WHERE id = ?`,
     ['downloading', progress, speed, eta, id, downloaded, total]
@@ -84,7 +88,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       const id = uuidv4()
-      const filename = path.basename(new URL(url).pathname) || `download_${Date.now()}`
+      const downloadType = getDownloadType(url)
+      const newURL = new URL(url)
+
+      let filename = `download_${Date.now()}`
+      switch(downloadType) {
+        case 'http':
+          filename = path.basename(newURL.pathname) || filename
+          break
+        case 'magnet':
+        case 'torrent':
+          filename = newURL.searchParams.get('dn') || filename
+          break
+      }
 
       const download: Download = {
         id,
@@ -104,10 +120,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       )
 
       // Start download immediately
-      setTimeout(() => {
-        updateDownloadStatus(id, 'downloading')
-        startDownload(download)
-      }, 1000)
+      startDownload(download)
 
       res.status(201).json(download)
     } catch (error) {
