@@ -71,7 +71,7 @@ export function DownloadManager() {
 
       if (response.ok) {
         const newDownload = await response.json()
-        setDownloads(prev => [...prev, newDownload])
+        setDownloads(prev => [newDownload, ...prev])
         toast({
           title: 'Download Added',
           description: `Started downloading ${newDownload.filename}`,
