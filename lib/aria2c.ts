@@ -340,7 +340,7 @@ export const deleteAria2Download = async (downloadId: string, deleteFile: boolea
   }
 
   // Remove from database
-  // await dbRun('DELETE FROM downloads WHERE id = ?', [downloadId])
+  await dbRun('DELETE FROM downloads WHERE id = ?', [downloadId])
 }
 
 export const checkAria2cInstalled = (): Promise<boolean> => {
