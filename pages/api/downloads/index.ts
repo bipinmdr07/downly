@@ -108,7 +108,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         filename,
         status: 'pending',
         progress: 0,
-        download_path: downloadPath,
+        download_path: process.env.IS_DOCKER ? path.join('/data/downloads/', downloadPath) : downloadPath,
         added_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }
@@ -116,7 +116,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await dbRun(
         `INSERT INTO downloads (id, url, filename, status, progress, download_path, added_at, updated_at)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-        [id, url, filename, 'pending', 0, downloadPath, download.added_at, download.updated_at]
+        [id, url, filename, 'pending', 0, download.download_path, download.added_at, download.updated_at]
       )
 
       // Start download immediately

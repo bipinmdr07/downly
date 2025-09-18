@@ -2,7 +2,9 @@ import { Download } from '@/pages/api/downloads';
 import path from 'path';
 import sqlite3 from 'sqlite3'
 
-const DB_PATH = path.join(process.env.DB_LOCATION || '', './downloads.db')
+const isDocker = process.env.IS_DOCKER === 'true';
+const dbLocation = isDocker ? '/data/db' : (process.env.DB_LOCATION || '')
+const DB_PATH = path.join(dbLocation, './downloads.db')
 const db = new sqlite3.Database(DB_PATH)
 type paramTypes = string | number | undefined
 

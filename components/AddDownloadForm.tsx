@@ -9,8 +9,14 @@ interface AddDownloadFormProps {
   onAddDownload: (url: string, downloadPath: string) => void;
 }
 
+interface ConfigType {
+  downloadPath?: string,
+  isDocker?: boolean
+}
+
 export const AddDownloadForm = ({ onAddDownload }: AddDownloadFormProps) => {
   const [url, setUrl] = useState("");
+  const [config, setConfig] = useState<ConfigType>({})
   const [downloadPath, setDownloadPath] = useState('');
 
   useEffect(() => {
@@ -29,7 +35,8 @@ export const AddDownloadForm = ({ onAddDownload }: AddDownloadFormProps) => {
     try {
       const response = await fetch('/api/configs')
       const data = await response.json()
-      setDownloadPath(data.config.downloadPath)
+      setConfig(data.config)
+      setDownloadPath(data.config.isDocker ? '/' : data.config.downloadPath)
     } catch (error) {
       console.error('Failed to fetch configs: ', error)
     }
@@ -60,6 +67,13 @@ export const AddDownloadForm = ({ onAddDownload }: AddDownloadFormProps) => {
 
             <div className="space-y-2">
               <Label htmlFor="downloadPath">Download Path</Label>
+              &nbsp;
+              {config.isDocker ? (
+              <code>
+                  [Download Dir: &quot;{config.downloadPath}&quot;]
+              </code>
+              ) : null}
+
               <div className="flex gap-2">
                 <Input
                   id="downloadPath"
